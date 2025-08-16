@@ -47,14 +47,16 @@
                 const li = document.createElement('li');
                 li.textContent = todo;
                 const btn = document.createElement('button');
+                btn.type = 'button';
                 btn.textContent = 'Remove';
                 btn.className = 'remove';
-                btn.onclick = () => {
-                    
-                    todos.pop();
+                btn.setAttribute('aria-label', `Remove "${todo}"`);
+                btn.addEventListener('click', () => {
+                    const todos = getTodos();
+                    todos.splice(idx, 1);
                     saveTodos(todos);
                     renderTodos();
-                };
+                });
                 li.appendChild(btn);
                 list.appendChild(li);
             });
