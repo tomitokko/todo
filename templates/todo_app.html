@@ -28,7 +28,53 @@
         <ul id="todo-list"></ul>
     </div>
     <script>
-        
+        const form = document.getElementById('todo-form');
+        const input = document.getElementById('todo-input');
+        const list = document.getElementById('todo-list');
+
+        function getTodos() {
+            return JSON.parse(localStorage.getItem('todos') || '[]');
+        }
+
+        function saveTodos(todos) {
+            localStorage.setItem('todos', JSON.stringify(todos));
+        }
+
+        function renderTodos() {
+            list.innerHTML = '';
+            const todos = getTodos();
+            todos.forEach((todo, idx) => {
+                const li = document.createElement('li');
+                li.textContent = todo;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = 'Remove';
+                btn.className = 'remove';
+                btn.setAttribute('aria-label', `Remove "${todo}"`);
+                btn.addEventListener('click', () => {
+                    const todos = getTodos();
+                    todos.splice(idx, 1);
+                    saveTodos(todos);
+                    renderTodos();
+                });
+                li.appendChild(btn);
+                list.appendChild(li);
+            });
+        }
+
+        form.onsubmit = e => {
+            e.preventDefault();
+            const value = input.value.trim();
+            if (value) {
+                const todos = getTodos();
+                todos.push(value);
+                saveTodos(todos);
+                input.value = '';
+                renderTodos();
+            }
+        };
+
+        renderTodos();
     </script>
 </body>
 </html>
